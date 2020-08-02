@@ -2,6 +2,7 @@
 const express = require("express");
 const path = require("path");
 const dbExport = require("./db/db.json");
+const { stringify } = require("querystring");
 
 // config
 const app = express();
@@ -34,6 +35,7 @@ app.post("/api/notes", (req, res) => {
   let maxId = Math.max(...allIds, 0);
   newNote.id = maxId + 1;
   dbExport.push(newNote);
+  saveDb();
   res.json("Success");
 });
 
@@ -42,8 +44,8 @@ app.delete("/api/notes/:noteId", (req, res) => {
   let indexOfNoteToRemove = dbExport.findIndex(
     (x) => x.id == req.params.noteId
   );
-  console.log("indexOfNoteToRemove: " + indexOfNoteToRemove);
   dbExport.splice(indexOfNoteToRemove, 1);
+  saveDb();
   res.json("Success");
 });
 
@@ -51,3 +53,13 @@ app.delete("/api/notes/:noteId", (req, res) => {
 app.listen(PORT, () => {
   console.log("listening on port: " + PORT);
 });
+
+function saveDb() {
+  writeToFile("./db/db.json", JSON.stringify(dbExport));
+}
+
+function writeToFile(fileName, data) {
+  fs.writeFile(fileName, data, function (err) {
+    if (err) throw err;
+  });
+}
