@@ -30,20 +30,20 @@ app.get("/api/notes", (req, res) => {
 app.post("/api/notes", (req, res) => {
   console.log(req.body);
   let newNote = req.body;
-  // find max id in db - function called max, find maximum value of object
   let allIds = dbExport.map((x) => x.id);
-  console.log(allIds);
   let maxId = Math.max(...allIds, 0);
   newNote.id = maxId + 1;
-  //const maxId = res;
   dbExport.push(newNote);
   res.json("Success");
 });
 
 app.delete("/api/notes/:noteId", (req, res) => {
-  console.log("Deleted: " + req.params.noteId);
-  // find note with noteId - look through dbExport, find note that has that id in the array and delete
-  // delete note from db -
+  console.log("Deleted id: " + req.params.noteId);
+  let indexOfNoteToRemove = dbExport.findIndex(
+    (x) => x.id == req.params.noteId
+  );
+  console.log("indexOfNoteToRemove: " + indexOfNoteToRemove);
+  dbExport.splice(indexOfNoteToRemove, 1);
   res.json("Success");
 });
 
