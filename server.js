@@ -31,6 +31,7 @@ app.post("/api/notes", (req, res) => {
   console.log(req.body);
   let newNote = req.body;
   newNote.id = 2; // find max id in db - function called max, find maximum value of object
+  const maxId
   dbExport.push(newNote);
   res.json("Success");
 });
